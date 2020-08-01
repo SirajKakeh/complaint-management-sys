@@ -1,12 +1,16 @@
-import React from 'react';
-import Login from './Login';
-import './App.css';
+import React from "react";
+import { Container } from "@material-ui/core";
+
+import Login from "./Login";
+import SendComplaint from "./SendComplaint";
+import "./App.css";
 
 function App() {
   return (
-    <div className="container">
-      <Login />
-    </div>
+    <Container>
+      <SendComplaint />
+      {/* <Login /> */}
+    </Container>
   );
 }
 
