@@ -1,4 +1,5 @@
 import React from "react";
+import { useHistory } from "react-router-dom";
 import { Formik, Form, Field } from "formik";
 import { Button, Grid, Typography } from "@material-ui/core";
 import { TextField } from "formik-material-ui";
@@ -7,11 +8,15 @@ import axios from "axios";
 import { initialValues, validationSchema } from "./forms/login";
 import CONFIG from "./config";
 
-export default function Login() {
+export default function Login({ setToken }) {
+  const history = useHistory();
   const onSubmit = values =>
     axios
       .post(CONFIG.api.baseUrl + "/login", values)
-      .then(console.log)
+      .then(({ data }) => {
+        setToken(data.token);
+        history.push(data.userRole === "admin" ? "/complaints" : "/create-complaint")
+      })
       .catch(console.error);
 
   return (

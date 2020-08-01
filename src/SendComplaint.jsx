@@ -42,7 +42,11 @@ const urgencies = [
 ];
 
 export default function SendComplaint() {
-  const onSubmit = values => {}
+  const onSubmit = values =>
+    axios
+      .post(CONFIG.api.baseUrl + "/complaint", values)
+      .then(console.log)
+      .catch(console.error);
 
   return (
     <Grid container>
@@ -144,8 +148,8 @@ export default function SendComplaint() {
             {/* COMPLAINT DETAILS */}
             <Grid item container xs={12}>
               <Box width="100%" my={2}>
-                <Field component={TextField} name="complaint" label="Details" />
-                {errors.complaint && touched.complaint && (
+                <Field component={TextField} name="details" label="Details" />
+                {errors.details && touched.details && (
                   <Grid item xs={12}>
                     <Typography color="error">More details required</Typography>
                   </Grid>

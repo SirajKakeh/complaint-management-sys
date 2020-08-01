@@ -1,25 +1,38 @@
 // @ts-check
 const express = require("express");
-const { BAD_REQUEST, UNAUTHORIZED } = require("http-status-codes");
+const { OK, BAD_REQUEST, INTERNAL_SERVER_ERROR, CREATED } = require("http-status-codes");
 
 const service = require("../service/complaint");
-const { generateToken } = require("../framework/jwt");
 
 const router = express.Router();
 
 router.post("/complaint", async (req, res) => {
-  const username = req.body.username;
-  const password = req.body.password;
-  if (!username || !password) {
-    return res.status(BAD_REQUEST).json({ errorCode: BAD_REQUEST, message: "both fields are required" });
-  }
-  const results = await service.login(username, password);
+  try {
+    const results = await service.addComplaint(req.body);
 
-  if (results.length) {
-    const token = await generateToken({ username, password, role: results[0].role });
-    return res.json({ token });
+    if (results.affectedRows > 0) {
+      return res.status(CREATED).json({ status: "success" });
+    }
+    return res.status(BAD_REQUEST).json({ errorCode: BAD_REQUEST, message: "bad data" });
+  } catch (error) {
+    console.error(error);
+    return res
+      .status(INTERNAL_SERVER_ERROR)
+      .json({ errorCode: INTERNAL_SERVER_ERROR, message: JSON.stringify(error, null, 2) });
   }
-  return res.status(UNAUTHORIZED).json({ errorCode: UNAUTHORIZED, message: "bad username or password" });
+});
+
+router.get("/complaints", async (req, res) => {
+  try {
+    const results = await service.getComplaints();
+
+    return res.status(OK).json({ status: "success", data: results });
+  } catch (error) {
+    console.error(error);
+    return res
+      .status(INTERNAL_SERVER_ERROR)
+      .json({ errorCode: INTERNAL_SERVER_ERROR, message: JSON.stringify(error, null, 2) });
+  }
 });
 
 module.exports = router;

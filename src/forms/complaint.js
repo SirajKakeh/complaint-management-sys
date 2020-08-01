@@ -7,7 +7,7 @@ export const initialValues = {
   phone: "",
   departmentId: "",
   urgencyId: "",
-  complaint: "",
+  details: "",
 };
 
 export const validationSchema = Yup.object().shape({
@@ -17,5 +17,5 @@ export const validationSchema = Yup.object().shape({
   phone: Yup.number().min(9).integer(),
   departmentId: Yup.number().required().integer(),
   urgencyId: Yup.number().required().integer(),
-  complaint: Yup.string().required().min(10),
+  details: Yup.string().required().min(10),
 });
